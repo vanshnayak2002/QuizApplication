@@ -6,6 +6,9 @@ import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,7 +21,7 @@ public class QuestionsService {
    private QuestionsDao questionsDao;
 
     public List<Question> getAllQuestions() {
-       return  ResponseEntit<>(questionsDao.findAll().getSa);
+       return new ResponseEntity<>(questionsDao.findAll(), HttpStatus.OK);
 
     }
 
