@@ -6,6 +6,8 @@ import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,26 +19,59 @@ public class QuestionsService {
     @Autowired
    private QuestionsDao questionsDao;
 
-    public List<Question> getAllQuestions() {
-       return  ResponseEntit<>(questionsDao.findAll().getSa);
+    public ResponseEntity<List<Question>> getAllQuestions() {
+       try {
+           return new ResponseEntity<>(questionsDao.findAll(), HttpStatus.OK);
+       }
+       catch (Exception e) {
+         e.printStackTrace();
+       }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+       }
 
+    public ResponseEntity<List<Question>> getQuestionsByCategory(String category) {
+try {
+    return new ResponseEntity<>(questionsDao.findQuestionsByCategory(category), HttpStatus.OK);
+
+}
+catch (Exception e) {
+    e.printStackTrace();
+
+}
+return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
     }
 
-    public List<Question> getQuestionsByCategory(String category) {
-
-        return  questionsDao.findQuestionsByCategory(category);
-    }
-
-    public String addQuestion(Question question) {
+    public ResponseEntity<String> addQuestion(Question question) {
        questionsDao.save(question);
-        return "Question added successfully";
-    }
+       try {
+           return new ResponseEntity<>("Question added successfully",HttpStatus.OK);
+       }
+       catch (Exception e) {
+         e.printStackTrace();
+       }
+        return new ResponseEntity<>("Error adding question",HttpStatus.BAD_REQUEST);
+            }
 
-    public String deleteQuestion(int id) {
+    public ResponseEntity<String> deleteQuestion(int id) {
          questionsDao.deleteById(id);
-       return "Question deleted with id: " + id + " successfully";
-
-
+         try {
+             return new ResponseEntity<>("Question deleted with id: " + id + " successfully",HttpStatus.OK  );
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+        return new ResponseEntity<>("Error deleting question",HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<List<Question>> getQuestionsByDifficulty(String difficultyLevel){
+        try {
+            return new ResponseEntity<>(questionsDao.findQuestionsByDifficultyLevel(difficultyLevel), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+    }
+
+
 
 }
